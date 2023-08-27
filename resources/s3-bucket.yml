@@ -1,0 +1,47 @@
+Resources:
+  S3FileStorage:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: bp-gabu-files-${self:custom.currentStage}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - "*"
+            AllowedMethods:
+              - GET
+              - PUT
+            AllowedOrigins:
+              - "*"
+      LifecycleConfiguration:
+        Rules:
+          -
+            ExpirationInDays: 30
+            Prefix: 'chatsAudios'
+            Status: Enabled
+          -
+            ExpirationInDays: 30
+            Prefix: 'chatsImages'
+            Status: Enabled
+  S3FileStoragePolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3FileStorage
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowGetObject
+            Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: arn:aws:s3:::bp-gabu-files-${self:custom.currentStage}/*
+          - Sid: AllowPutObject
+            Effect: Allow
+            Principal: '*'
+            Action: s3:PutObject
+            Resource: arn:aws:s3:::bp-gabu-files-${self:custom.currentStage}/*
+

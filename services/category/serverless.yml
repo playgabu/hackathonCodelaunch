@@ -1,0 +1,56 @@
+service: category
+
+provider:
+  name: aws
+  region: us-east-1
+  stage: ${self:custom.currentStage}
+  runtime: nodejs16.x
+  role:
+    'Fn::ImportValue': gabu-lambda-role-${self:custom.currentStage}
+  apiGateway:
+    restApiId:
+      'Fn::ImportValue': ${self:custom.currentStage}-ExtApiGatewayRestApiId
+    restApiRootResourceId:
+      'Fn::ImportValue': ${self:custom.currentStage}-ExtApiGatewayRestApiRootResourceId
+  environment:
+    env: ${self:custom.currentStage}
+  deploymentBucket:
+    name: ${self:custom.deploymentBucketName}
+
+custom:
+  currentStage: ${file(../../serverless.yml):custom.currentStage}
+  deploymentBucketName: ${file(../../serverless.yml):custom.deploymentBucketName}
+  authorizerId:
+    'Fn::ImportValue': ${self:custom.currentStage}-ApiCustomAuthorizerId
+  bundle:
+    sourcemaps: false
+    linting: false
+
+plugins:
+  - serverless-bundle
+  - serverless-offline
+
+functions:
+  sample:
+    name: categorylist-${self:custom.currentStage}
+    handler: lambdas/category.list
+    events:
+      - http:
+          path: /category
+          method: GET
+          authorizer:
+            type: REQUEST
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
+  postCategory:
+    name: postCategory-${self:custom.currentStage}
+    handler: lambdas/category.postCategory
+    events:
+      - http:
+          path: /postCategory
+          method: POST
+          authorizer:
+            type: REQUEST
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
+

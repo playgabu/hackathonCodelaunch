@@ -1,0 +1,45 @@
+service: gabu-backend
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: us-east-1
+  stage: ${self:custom.currentStage}
+  runtime: nodejs16.x
+  deploymentBucket:
+    name: ${self:custom.deploymentBucketName}
+    blockPublicAccess: true
+  environment:
+    env: ${self:custom.currentStage}
+
+plugins:
+  - serverless-dynamodb-local
+  - serverless-bundle
+  - serverless-offline
+
+custom:
+  currentStage: dev
+  userPoolName: ${self:custom.currentStage}-user-pool-${self:service}
+  userPoolClientName: ${self:custom.currentStage}-user-pool-client-${self:service}
+  deploymentBucketName: bp-gabu-deploymentbucket-${self:custom.currentStage}
+  bundle:
+    sourcemaps: false
+    linting: false
+  dynamodb:
+    stages:
+      - ${self:custom.currentStage}
+    start:
+      port: 2000
+      migrate: true
+      seed: true
+      dbPath: ./db
+
+resources:
+  - ${file(resources/apigateway.yml)}
+  - ${file(resources/api-gateway-errors.yml)}
+  - ${file(resources/dynamodb.yml)}
+  - ${file(resources/cognito-user-pool.yml)}
+  - ${file(resources/iam-roles.yml)}
+  - ${file(resources/s3-bucket.yml)}
+  - ${file(resources/sqs.yml)}
+

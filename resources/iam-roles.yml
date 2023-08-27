@@ -1,0 +1,72 @@
+Resources:
+  IAMDefaultRoleLambdas:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      RoleName: gabu-lambda-role-${self:custom.currentStage}
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: gabu-lambda-role-${self:custom.currentStage}
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:DescribeTable
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:BatchGetItem
+                  - dynamodb:BatchWriteItem
+                  - dynamodb:Delete*
+                  - dynamodb:Get*
+                  - logs:*
+                  - s3:DeleteObject
+                  - rekognition:CompareFaces
+                  - rekognition:DetectText
+                  - s3:GetObject
+                  - execute-api:*
+                  - sns:*
+                  - cognito-idp:ListUsers
+                  - sqs:*
+                Resource: '*'
+  APIGatewayExecutionRoleAuthorizer:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      RoleName: LambdaAuthorizer-default-${self:custom.currentStage}
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaAuthorizer-default-${self:custom.currentStage}
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:invokeFunction
+                Resource:
+                  - Fn::GetAtt: [ApiCustomAuthorizerLambdaFunction, Arn]
+
+Outputs:
+  DefaultLambdaRole:
+    Value:
+      Fn::GetAtt:
+        - IAMDefaultRoleLambdas
+        - Arn
+    Export:
+      Name: gabu-lambda-role-${self:custom.currentStage}

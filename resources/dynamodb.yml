@@ -1,0 +1,21 @@
+Resources:
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Users_${self:custom.currentStage}
+      AttributeDefinitions:
+        - AttributeName: socketId
+          AttributeType: S
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: socketId-index
+          KeySchema:
+            - AttributeName: socketId
+              KeyType: HASH
+          Projection:
+            ProjectionType: 'ALL'
+      BillingMode: PAY_PER_REQUEST
