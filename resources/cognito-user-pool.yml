@@ -13,7 +13,7 @@ Resources:
           RequireNumbers: True
           RequireSymbols: False
           RequireUppercase: True
-      AutoVerifiedAttributes: 
+      AutoVerifiedAttributes:
         - email
       EmailVerificationMessage: "Utiliza el siguiente código {####}"
       EmailVerificationSubject: "Código de Activación"
@@ -29,6 +29,10 @@ Outputs:
   UserPoolId:
     Value:
       Ref: CognitoUserPool
+    Export:
+      Name: ${self:custom.currentStage}-CognitoUserPoolId
   UserPoolClientId:
     Value:
       Ref: CognitoUserPoolClient
+    Export:
+      Name: ${self:custom.currentStage}-CognitoUserPoolClientId

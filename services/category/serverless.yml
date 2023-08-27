@@ -14,6 +14,8 @@ provider:
       'Fn::ImportValue': ${self:custom.currentStage}-ExtApiGatewayRestApiRootResourceId
   environment:
     env: ${self:custom.currentStage}
+    clientId: ${self:custom.clientId}
+    userPoolId: ${self:custom.userPoolId}
   deploymentBucket:
     name: ${self:custom.deploymentBucketName}
 
@@ -22,6 +24,10 @@ custom:
   deploymentBucketName: ${file(../../serverless.yml):custom.deploymentBucketName}
   authorizerId:
     'Fn::ImportValue': ${self:custom.currentStage}-ApiCustomAuthorizerId
+  clientId:
+    'Fn::ImportValue': ${self:custom.currentStage}-CognitoUserPoolClientId
+  userPoolId:
+    'Fn::ImportValue': ${self:custom.currentStage}-CognitoUserPoolId
   bundle:
     sourcemaps: false
     linting: false
