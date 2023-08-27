@@ -14,7 +14,8 @@ provider:
 
 plugins:
   - serverless-dynamodb-local
-  - serverless-bundle
+  - serverless-deployment-bucket
+  # - serverless-bundle
   - serverless-offline
 
 custom:
@@ -41,5 +42,5 @@ resources:
   - ${file(resources/cognito-user-pool.yml)}
   - ${file(resources/iam-roles.yml)}
   - ${file(resources/s3-bucket.yml)}
-  - ${file(resources/sqs.yml)}
+  # - ${file(resources/sqs.yml)}
 

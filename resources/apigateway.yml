@@ -19,26 +19,6 @@ Resources:
       Type: COGNITO_USER_POOLS
       ProviderARNs:
         - Fn::GetAtt: [CognitoUserPool, Arn]
-  APIGatewayCustomAuthorizer:
-    DependsOn:
-      - ApiGatewayRestApi
-    Type: "AWS::ApiGateway::Authorizer"
-    Properties:
-      AuthorizerCredentials: 
-        Fn::GetAtt: [APIGatewayExecutionRoleAuthorizer, Arn]
-      AuthorizerResultTtlInSeconds: 0
-      Name: ${self:service}-custom-authorizer-${self:custom.currentStage}
-      IdentitySource: method.request.header.Authorization
-      RestApiId: 
-        Ref: ApiGatewayRestApi
-      Type: REQUEST
-      AuthorizerUri: !Join 
-        - ''
-        - - 'arn:aws:apigateway:'
-          - Ref: 'AWS::Region'
-          - ':lambda:path/2015-03-31/functions/'
-          - Fn::GetAtt: [ApiCustomAuthorizerLambdaFunction, Arn]
-          - /invocations
 
 Outputs:
   ApiGatewayRestApiId:
@@ -58,8 +38,3 @@ Outputs:
       Ref: APIGatewayAuthorizer
     Export:
       Name: ${self:custom.currentStage}-ApiAuthorizerId
-  ApiCustomAuthorizerId:
-    Value:
-      Ref: APIGatewayCustomAuthorizer
-    Export:
-      Name: ${self:custom.currentStage}-ApiCustomAuthorizerId

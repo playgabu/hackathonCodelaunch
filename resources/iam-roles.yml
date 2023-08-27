@@ -38,29 +38,6 @@ Resources:
                   - cognito-idp:ListUsers
                   - sqs:*
                 Resource: '*'
-  APIGatewayExecutionRoleAuthorizer:
-    Type: AWS::IAM::Role
-    Properties:
-      Path: /
-      RoleName: LambdaAuthorizer-default-${self:custom.currentStage}
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - apigateway.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: LambdaAuthorizer-default-${self:custom.currentStage}
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - lambda:invokeFunction
-                Resource:
-                  - Fn::GetAtt: [ApiCustomAuthorizerLambdaFunction, Arn]
 
 Outputs:
   DefaultLambdaRole:
