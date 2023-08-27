@@ -1,0 +1,31 @@
+{
+  "name": "gabu-backend",
+  "version": "1.0.0",
+  "description": "<!-- title: 'AWS NodeJS Example' description: 'This template demonstrates how to deploy a NodeJS function running on AWS Lambda using the traditional Serverless Framework.' layout: Doc framework: v3 platform: AWS language: nodeJS priority: 1 authorLink: 'https://github.com/serverless' authorName: 'Serverless, inc.' authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4' -->",
+  "main": "index.js",
+  "scripts": {
+    "configure": "python3 ./scripts/install.py",
+    "start": "node ./scripts/start.js",
+    "deploy": "python ./scripts/deploy.py"
+  },
+  "keywords": [],
+  "author": "BluePeople",
+  "license": "ISC",
+  "devDependencies": {
+    "aws-sdk": "^2.735.0",
+    "http-proxy": "^1.18.1",
+    "serverless": "^3.30.1",
+    "serverless-bundle": "^6.0.0",
+    "serverless-dynamodb-local": "^0.2.36",
+    "serverless-offline": "^12.0.4",
+    "serverless-prune-plugin": "^2.0.2"
+  },
+  "dependencies": {
+    "moment": "^2.29.4",
+    "uuid": "^8.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git-codecommit.us-east-1.amazonaws.com/v1/repos/gabu-backend"
+  }
+}
