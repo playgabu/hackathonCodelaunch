@@ -20,6 +20,17 @@ export default class SessionChildModel {
 		}
 	}
 
+	static async getByAccessToken(accessToken) {
+		const params = {
+			TableName: `SessionChildren_${$ENV}`,
+			Key: {
+				accessToken: accessToken
+			}
+		}
+		let sessionProfile = await ddb.get(params).promise()
+		return sessionProfile.Item
+	}
+
 	static async add(sessionProfile) {
 		sessionProfile.validate()
 

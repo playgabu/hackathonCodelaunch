@@ -59,4 +59,15 @@ functions:
             type: COGNITO_USER_POOLS
             authorizerId: ${self:custom.authorizerId}
           cors: true
+  getCurrentChild:
+    name: getCurrentChild-${self:custom.currentStage}
+    handler: lambdas/get.handler
+    events:
+      - http:
+          path: /child
+          method: GET
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
 

@@ -51,6 +51,22 @@ export default class ChildModel {
 	}
 
 	/**
+	 * @param {string} userId
+	 */
+	static async getByUserId(userId) {
+		const params = {
+			TableName: `Children_${$ENV}`,
+			IndexName: 'user-index',
+			KeyConditionExpression: 'userId = :userId',
+			ExpressionAttributeValues: {
+				':userId': userId
+			}
+		}
+		let children = await ddb.query(params).promise()
+		return children.Items
+	}
+
+	/**
 	 * @param {ChildModel} child
 	 */
 	static async add(child) {

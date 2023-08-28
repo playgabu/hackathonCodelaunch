@@ -40,6 +40,17 @@ plugins:
   - serverless-offline
 
 functions:
+  getCurrentUser:
+    name: getCurrentUser-${self:custom.currentStage}
+    handler: lambdas/get.handler
+    events:
+      - http:
+          path: /user/current
+          method: GET
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
   createUser:
     name: createUser-${self:custom.currentStage}
     handler: lambdas/create.handler
@@ -58,9 +69,9 @@ functions:
       - http:
           path: /user
           method: PUT
-          # authorizer:
-          #   type: COGNITO_USER_POOLS
-          #   authorizerId: ${self:custom.authorizerId}
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${self:custom.authorizerId}
           cors: true
   login:
     name: login-${self:custom.currentStage}
