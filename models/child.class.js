@@ -53,7 +53,7 @@ export default class ChildModel {
 	/**
 	 * @param {string} userId
 	 */
-	static async getByUserId(userId) {
+	static async getAllByUserId(userId) {
 		const params = {
 			TableName: `Children_${$ENV}`,
 			IndexName: 'user-index',
@@ -64,6 +64,18 @@ export default class ChildModel {
 		}
 		let children = await ddb.query(params).promise()
 		return children.Items
+	}
+
+	static async getAllById(ids) {
+		const params = {
+			RequestItems: {
+				[`Children_${$ENV}`]: {
+					Keys: ids.map(id => ({ id }))
+				}
+			}
+		}
+		let children = await ddb.batchGet(params).promise()
+		return children.Responses[`Children_${$ENV}`]
 	}
 
 	/**
@@ -79,5 +91,23 @@ export default class ChildModel {
 		}
 		await ddb.put(params).promise()
 		return child
+	}
+
+	static async setGameSession(childId, gameSessionId) {
+		let child = this.get(childId)
+		if (!child) {
+			throw new Error('Child not found')
+		}
+
+		child.gameSessionId = gameSessionId
+
+		await ddb.update({
+			Key: { id: childId },
+			TableName: `Children_${$ENV}`,
+			UpdateExpression: 'set gameSessionId = :gameSessionId',
+			ExpressionAttributeValues: {
+				':gameSessionId': child.gameSessionId,
+			},
+		}).promise()
 	}
 }

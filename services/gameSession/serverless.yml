@@ -48,4 +48,37 @@ functions:
             type: COGNITO_USER_POOLS
             authorizerId: ${self:custom.authorizerId}
           cors: true
+  getGameSession:
+    name: getGameSession-${self:custom.currentStage}
+    handler: lambdas/get.handler
+    events:
+      - http:
+          path: /gameSession/{id}
+          method: GET
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
+  joinGameSession:
+    name: joinGameSession-${self:custom.currentStage}
+    handler: lambdas/join.handler
+    events:
+      - http:
+          path: /gameSession/{id}/join
+          method: POST
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
+  leaveGameSession:
+    name: leaveGameSession-${self:custom.currentStage}
+    handler: lambdas/leave.handler
+    events:
+      - http:
+          path: /gameSession/{id}/leave
+          method: POST
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
 

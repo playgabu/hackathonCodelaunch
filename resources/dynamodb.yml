@@ -76,12 +76,16 @@ Resources:
       KeySchema:
         - AttributeName: id
           KeyType: HASH
-        - AttributeName: dateTime
-          KeyType: RANGE
       GlobalSecondaryIndexes:
         - IndexName: game-index
           KeySchema:
             - AttributeName: game
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: date-index
+          KeySchema:
+            - AttributeName: dateTime
               KeyType: HASH
           Projection:
             ProjectionType: ALL

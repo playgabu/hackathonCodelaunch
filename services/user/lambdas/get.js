@@ -17,7 +17,7 @@ export const handler = async (event) => {
 		}
 	}
 
-	const children = await ChildModel.getByUserId(user.id)
+	const children = await ChildModel.getAllByUserId(user.id)
 
 	response.body = {
 		...user,

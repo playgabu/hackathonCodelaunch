@@ -55,6 +55,15 @@ export default class GameSessionModel {
 		return gameSessions.Items
 	}
 
+	static async get(id) {
+		const params = {
+			TableName: `GameSessions_${$ENV}`,
+			Key: { 'id': id }
+		}
+		let session = await ddb.get(params).promise()
+		return session.Item
+	}
+
 	/**
 	 * @param {GameSessionModel} gameSession
 	 */
@@ -68,5 +77,49 @@ export default class GameSessionModel {
 		}
 		await ddb.put(params).promise()
 		return gameSession
+	}
+
+	static async addChild(id, childId) {
+		let session = await this.get(id)
+		if (!session) {
+			throw new Error('Session not found')
+		}
+
+		if(!session.childrenIds || !session.childrenIds.includes(childId)) {
+			session.childrenIds = [...(session.childrenIds || []), childId]
+		}
+
+		await ddb.update({
+			Key: { id },
+			TableName: `GameSessions_${$ENV}`,
+			UpdateExpression: 'set childrenIds = :childrenIds',
+			ExpressionAttributeValues: {
+				':childrenIds': session.childrenIds,
+			},
+		}).promise()
+
+		return session
+	}
+
+	static async removeChild(id, childId) {
+		let session = await this.get(id)
+		if (!session) {
+			throw new Error('Session not found')
+		}
+
+		if(session.childrenIds && session.childrenIds.includes(childId)) {
+			session.childrenIds = session.childrenIds.filter(x => x !== childId)
+		}
+
+		await ddb.update({
+			Key: { id },
+			TableName: `GameSessions_${$ENV}`,
+			UpdateExpression: 'set childrenIds = :childrenIds',
+			ExpressionAttributeValues: {
+				':childrenIds': session.childrenIds,
+			},
+		}).promise()
+
+		return session
 	}
 }
