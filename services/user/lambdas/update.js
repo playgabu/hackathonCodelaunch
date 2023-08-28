@@ -11,7 +11,7 @@ export const handler = async (event) => {
 	let response = new Response()
 
 	// Get AccessToken from cookies
-	let accessToken = event.headers.cookie
+	const accessToken = event.headers.cookie
 		.split(';')
 		.map((pair) => pair.split('='))
 		.find(x => x[0].trim() === 'GabuIdentity')[1]

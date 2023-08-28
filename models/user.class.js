@@ -32,9 +32,6 @@ export default class UserModel {
 			Key: { 'id': id }
 		}
 		let user = await ddb.get(params).promise()
-		if (!user.Item) {
-			return null
-		}
 		return user.Item
 	}
 

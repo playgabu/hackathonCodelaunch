@@ -1,0 +1,62 @@
+service: child
+
+provider:
+  name: aws
+  region: us-east-1
+  stage: ${self:custom.currentStage}
+  runtime: nodejs16.x
+  role:
+    'Fn::ImportValue': gabu-lambda-role-${self:custom.currentStage}
+  apiGateway:
+    restApiId:
+      'Fn::ImportValue': ${self:custom.currentStage}-ExtApiGatewayRestApiId
+    restApiRootResourceId:
+      'Fn::ImportValue': ${self:custom.currentStage}-ExtApiGatewayRestApiRootResourceId
+  environment:
+    env: ${self:custom.currentStage}
+    clientId: ${self:custom.clientId}
+    userPoolId: ${self:custom.userPoolId}
+  deploymentBucket:
+    name: ${self:custom.deploymentBucketName}
+
+custom:
+  currentStage: ${file(../../serverless.yml):custom.currentStage}
+  deploymentBucketName: ${file(../../serverless.yml):custom.deploymentBucketName}
+  authorizerId:
+    'Fn::ImportValue': ${self:custom.currentStage}-ApiCustomAuthorizerId
+  clientId:
+    'Fn::ImportValue': ${self:custom.currentStage}-CognitoUserPoolClientId
+  userPoolId:
+    'Fn::ImportValue': ${self:custom.currentStage}-CognitoUserPoolId
+  bundle:
+    sourcemaps: false
+    linting: false
+
+plugins:
+  - serverless-bundle
+  - serverless-offline
+
+functions:
+  addChild:
+    name: addChild-${self:custom.currentStage}
+    handler: lambdas/add.handler
+    events:
+      - http:
+          path: /child
+          method: POST
+          authorizer:
+            type: REQUEST
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
+  selectChild:
+    name: selectChild-${self:custom.currentStage}
+    handler: lambdas/select.handler
+    events:
+      - http:
+          path: /child/{childId}/select
+          method: POST
+          authorizer:
+            type: REQUEST
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
+

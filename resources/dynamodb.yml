@@ -19,3 +19,46 @@ Resources:
           Projection:
             ProjectionType: ALL
       BillingMode: PAY_PER_REQUEST
+  ChildrenTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Children_${self:custom.currentStage}
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: user-index
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      BillingMode: PAY_PER_REQUEST
+  SessionProfileTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: SessionChildren_${self:custom.currentStage}
+      AttributeDefinitions:
+        - AttributeName: accessToken
+          AttributeType: S
+        - AttributeName: childId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: accessToken
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: child-index
+          KeySchema:
+            - AttributeName: childId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      BillingMode: PAY_PER_REQUEST
+      TimeToLiveSpecification:
+        Enabled: true
+        AttributeName: 'TTL'
