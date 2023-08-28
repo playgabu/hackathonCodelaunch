@@ -3,10 +3,11 @@ import { v4 as uuid } from 'uuid';
 
 const $ENV = process.env.env;
 export default class UserModel {
-	constructor(email, fullName, phone, password) {
+	constructor(email, fullName, phone, pin) {
 		this.email = email
 		this.fullName = fullName
 		this.phone = phone
+		this.pin = pin
 	}
 
 	validate() {
@@ -15,6 +16,10 @@ export default class UserModel {
 			if (typeof this[field] !== 'string' || !this[field]) {
 				throw new Error(`Field ${field} is required`)
 			}
+		}
+
+		if(!this.pin || this.pin.length !== 4 || this.pin.match(/\D/)) {
+			throw new Error('Pin must be 4 digits')
 		}
 	}
 
@@ -33,6 +38,9 @@ export default class UserModel {
 		return user.Item
 	}
 
+	/**
+   * @param {string} email
+   */
 	static async getByEmail(email) {
 		const gettingParams = {
 			TableName: `Users_${$ENV}`,

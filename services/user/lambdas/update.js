@@ -34,6 +34,7 @@ export const handler = async (event) => {
 	let newUser = new UserModel(body.email, body.fullName, body.phone)
 
 	newUser.id = currentUser.id
+	newUser.pin = currentUser.pin
 
 	try {
 		await cognito.adminUpdateUserAttributes({

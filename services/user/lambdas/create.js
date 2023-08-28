@@ -11,10 +11,9 @@ const ClientId = process.env.clientId;
 export const handler = async (event) => {
 	let response = new Response()
   let body = JSON.parse(event.body)
-	let user = new UserModel(body.email, body.fullName, body.phone)
+	let user = new UserModel(body.email, body.fullName, body.phone, body.pin)
 
 	try {
-		user = await UserModel.add(user)
 		await cognito.signUp({
 				ClientId: ClientId,
 				Username: user.email,
@@ -24,6 +23,7 @@ export const handler = async (event) => {
 				UserPoolId: UserPoolId,
 				Username: user.email,
 			}).promise()
+		user = await UserModel.add(user)
 
 		response.body = user
 	}
