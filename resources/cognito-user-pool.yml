@@ -17,6 +17,13 @@ Resources:
         - email
       EmailVerificationMessage: "Utiliza el siguiente código {####}"
       EmailVerificationSubject: "Código de Activación"
+      Schema:
+        - AttributeDataType: String
+          Mutable: false
+          Name: dbId
+          StringAttributeConstraints:
+            MaxLength: "2048"
+            MinLength: "0"
   CognitoUserPoolClient:
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
