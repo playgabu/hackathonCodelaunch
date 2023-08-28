@@ -20,8 +20,8 @@ export async function getCurrentCognitoUser(event) {
 }
 
 export function getAccessToken(event) {
-  return event.headers.cookie
-    .split(';')
-    .map((pair) => pair.split('='))
-    .find(x => x[0].trim() === 'GabuIdentity')[1]
+  let token = event.headers.authorization
+  if (!token) return null
+
+  return token.startsWith('Bearer') ? token.split(' ')[1] : token
 }

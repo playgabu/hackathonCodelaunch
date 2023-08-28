@@ -21,14 +21,14 @@ export const handler = async (event) => {
 			AuthParameters: {
 				USERNAME: email,
 				PASSWORD: password
-			  }
+			}
 		}).promise()
 
 		if (authResponse && authResponse.AuthenticationResult) {
-			const { RefreshToken, IdToken } = authResponse.AuthenticationResult;
+			const { RefreshToken, AccessToken } = authResponse.AuthenticationResult;
 			response.body = {
 			  refreshToken: RefreshToken,
-			  accessToken: IdToken,
+			  accessToken: AccessToken,
 			  id: userData.id
 			}
 
