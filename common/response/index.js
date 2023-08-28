@@ -18,6 +18,10 @@ class Response {
     this.responseObject.body = JSON.stringify(bodyObject);
   }
 
+  set headers(headers) {
+    this.responseObject.headers = headers;
+  }
+
   toObject() {
     return this.responseObject;
   }

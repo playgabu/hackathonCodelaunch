@@ -1,7 +1,7 @@
-import { CognitoIdentityServiceProvider } from 'aws-sdk';
+import AWS from 'aws-sdk';
 
 
-const cognitoISP = new CognitoIdentityServiceProvider({
+const cognitoISP = new AWS.CognitoIdentityServiceProvider({
   apiVersion: '2016-04-18',
   region: 'us-east-1'
 });

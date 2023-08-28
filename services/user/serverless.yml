@@ -1,4 +1,4 @@
-service: category
+service: user
 
 provider:
   name: aws
@@ -37,23 +37,34 @@ plugins:
   - serverless-offline
 
 functions:
-  sample:
-    name: categorylist-${self:custom.currentStage}
-    handler: lambdas/category.list
+  createUser:
+    name: createUser-${self:custom.currentStage}
+    handler: lambdas/create.handler
     events:
       - http:
-          path: /category
-          method: GET
+          path: /user
+          method: POST
           authorizer:
             type: REQUEST
             authorizerId: ${self:custom.authorizerId}
           cors: true
-  postCategory:
-    name: postCategory-${self:custom.currentStage}
-    handler: lambdas/category.postCategory
+  updateUser:
+    name: updateUser-${self:custom.currentStage}
+    handler: lambdas/update.handler
     events:
       - http:
-          path: /postCategory
+          path: /user
+          method: PUT
+          authorizer:
+            type: REQUEST
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
+  login:
+    name: login-${self:custom.currentStage}
+    handler: lambdas/login.handler
+    events:
+      - http:
+          path: /login
           method: POST
           authorizer:
             type: REQUEST
