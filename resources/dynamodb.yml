@@ -62,3 +62,27 @@ Resources:
       TimeToLiveSpecification:
         Enabled: true
         AttributeName: 'TTL'
+  GameSessionTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: GameSessions_${self:custom.currentStage}
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: game
+          AttributeType: N
+        - AttributeName: dateTime
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+        - AttributeName: dateTime
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: game-index
+          KeySchema:
+            - AttributeName: game
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      BillingMode: PAY_PER_REQUEST

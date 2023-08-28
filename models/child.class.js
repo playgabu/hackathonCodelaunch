@@ -1,4 +1,5 @@
 import ddb from '../common/dynamodb';
+import enums from './enums'
 import { v4 as uuid } from 'uuid';
 
 const $ENV = process.env.env;
@@ -7,8 +8,8 @@ export default class ChildModel {
    * @param {id} userId
    * @param {string} username
    * @param {string} birthDate
-   * @param {Genre} genre
-   * @param {[Games]} favoriteGames
+   * @param {enums.Genres} genre
+   * @param {[enums.Games]} favoriteGames
    * @param {string} avatar
    */
 	constructor(userId, username, birthDate, genre, favoriteGames, avatar) {
@@ -28,11 +29,11 @@ export default class ChildModel {
 			}
 		}
 
-		if (!Object.values(Genre).includes(this.genre)) {
+		if (!Object.values(enums.Genres).includes(this.genre)) {
 			throw new Error(`Genre is invalid`)
 		}
 
-		if (!this.favoriteGames || !this.favoriteGames.length || !this.favoriteGames.every(game => Object.values(Games).includes(game))) {
+		if (!this.favoriteGames || !this.favoriteGames.length || !this.favoriteGames.every(game => Object.values(enums.Games).includes(game))) {
 			throw new Error(`Favorite games are invalid`)
 		}
 	}
@@ -63,17 +64,4 @@ export default class ChildModel {
 		await ddb.put(params).promise()
 		return child
 	}
-}
-
-export const Genre = {
-	male: 0,
-	female: 1,
-	other: 2,
-}
-
-export const Games = {
-	roblox: 0,
-	minecraft: 1,
-	fortnite: 2,
-	fallGuys: 3,
 }
