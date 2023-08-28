@@ -27,16 +27,16 @@ export const handler = async (event) => {
 		if (authResponse && authResponse.AuthenticationResult) {
 			const { RefreshToken, IdToken } = authResponse.AuthenticationResult;
 			response.body = {
-			  RefreshToken,
-			  AccessToken: IdToken,
+			  refreshToken: RefreshToken,
+			  accessToken: IdToken,
 			  id: userData.id
 			}
 
 		  } else {
 			response.body = {
 			  authResponse,
-			  AccessToken: "",
-			  RefreshToken: "",
+			  accessToken: "",
+			  refreshToken: "",
 			  message: "No se pudo iniciar sesión"
 			}
 		  }

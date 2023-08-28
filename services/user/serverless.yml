@@ -15,10 +15,10 @@ provider:
       'Fn::ImportValue': ${self:custom.currentStage}-ExtApiGatewayRestApiRootResourceId
   environment:
     env: ${self:custom.currentStage}
-    # clientId: ${self:custom.clientId}
-    # userPoolId: ${self:custom.userPoolId}
-    clientId: 746rj7cov5qsnj8t9esckup6o0
-    userPoolId: us-east-1_ymT4PriZh
+    clientId: ${self:custom.clientId}
+    userPoolId: ${self:custom.userPoolId}
+    # clientId: 746rj7cov5qsnj8t9esckup6o0
+    # userPoolId: us-east-1_ymT4PriZh
   deploymentBucket:
     name: ${self:custom.deploymentBucketName}
 
@@ -70,6 +70,14 @@ functions:
           path: /login
           method: POST
           cors: true
+  refreshSession:
+    name: refreshSession-${self:custom.currentStage}
+    handler: lambdas/refreshSession.handler
+    events:
+      - http:
+          path: /refreshSession
+          method: POST
+          cors: true
   requestPasswordReset:
     name: requestPasswordReset-${self:custom.currentStage}
     handler: lambdas/passwordReset.request
@@ -78,7 +86,7 @@ functions:
           path: /user/passwordResetRequest
           method: POST
           authorizer:
-            type: REQUEST
+            type: COGNITO_USER_POOLS
             authorizerId: ${self:custom.authorizerId}
           cors: true
   passwordReset:
@@ -89,7 +97,7 @@ functions:
           path: /user/passwordReset
           method: POST
           authorizer:
-            type: REQUEST
+            type: COGNITO_USER_POOLS
             authorizerId: ${self:custom.authorizerId}
           cors: true
 
