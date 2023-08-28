@@ -23,7 +23,7 @@ custom:
   currentStage: ${file(../../serverless.yml):custom.currentStage}
   deploymentBucketName: ${file(../../serverless.yml):custom.deploymentBucketName}
   authorizerId:
-    'Fn::ImportValue': ${self:custom.currentStage}-ApiCustomAuthorizerId
+    'Fn::ImportValue': ${self:custom.currentStage}-ApiAuthorizerId
   clientId:
     'Fn::ImportValue': ${self:custom.currentStage}-CognitoUserPoolClientId
   userPoolId:
@@ -45,7 +45,7 @@ functions:
           path: /child
           method: POST
           authorizer:
-            type: REQUEST
+            type: COGNITO_USER_POOLS
             authorizerId: ${self:custom.authorizerId}
           cors: true
   selectChild:
@@ -56,7 +56,7 @@ functions:
           path: /child/{childId}/select
           method: POST
           authorizer:
-            type: REQUEST
+            type: COGNITO_USER_POOLS
             authorizerId: ${self:custom.authorizerId}
           cors: true
 

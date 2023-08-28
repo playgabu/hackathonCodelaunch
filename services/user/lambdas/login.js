@@ -9,26 +9,39 @@ const ClientId = process.env.clientId;
 
 export const handler = async (event) => {
 	let response = new Response()
-  let body = JSON.parse(event.body)
+  	let body = JSON.parse(event.body)
 	let email = body.email
 	let password = body.password
 
 	try {
-		let res = await cognito.adminInitiateAuth({
-			AuthFlow: 'ADMIN_USER_PASSWORD_AUTH',
-			UserPoolId: UserPoolId,
+		let userData = UserModel.getByEmail(email)
+		let authResponse = await cognito.initiateAuth({
+			AuthFlow: "USER_PASSWORD_AUTH",
 			ClientId: ClientId,
 			AuthParameters: {
 				USERNAME: email,
-				PASSWORD: password,
-			},
+				PASSWORD: password
+			  }
 		}).promise()
 
-		response.headers = {
-			...response.headers,
-			'Set-Cookie': `GabuIdentity=${res.AuthenticationResult.AccessToken}`,
-		}
+		if (authResponse && authResponse.AuthenticationResult) {
+			const { RefreshToken, IdToken } = authResponse.AuthenticationResult;
+			response.body = {
+			  RefreshToken,
+			  AccessToken: IdToken,
+			  id: userData.id
+			}
+
+		  } else {
+			response.body = {
+			  authResponse,
+			  AccessToken: "",
+			  RefreshToken: "",
+			  message: "No se pudo iniciar sesión"
+			}
+		  }
 	}
+
 	catch (error) {
 		response.statusCode = 500
 		response.body = { message: error.message }

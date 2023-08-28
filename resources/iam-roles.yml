@@ -35,7 +35,7 @@ Resources:
                   - s3:GetObject
                   - execute-api:*
                   - sns:*
-                  - cognito-idp:ListUsers
+                  - cognito-idp:*
                   - sqs:*
                 Resource: '*'
 
