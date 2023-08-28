@@ -44,6 +44,16 @@ export const handler = async (event) => {
 			Password: body.password,
 			Permanent: true,
 		}).promise()
+		await cognito.adminUpdateUserAttributes({
+			UserPoolId: UserPoolId,
+			Username: user.email,
+			UserAttributes: [
+				{
+					Name: 'email_verified',
+					Value: 'true',
+				}
+			]
+		}).promise()
 		if(!currentUser || !currentUser.id) {
 			user = await UserModel.add(user)
 		}
