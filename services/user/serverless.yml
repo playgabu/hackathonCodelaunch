@@ -4,6 +4,7 @@ provider:
   name: aws
   region: us-east-1
   stage: ${self:custom.currentStage}
+  profile: training
   runtime: nodejs16.x
   role:
     'Fn::ImportValue': gabu-lambda-role-${self:custom.currentStage}
@@ -14,8 +15,10 @@ provider:
       'Fn::ImportValue': ${self:custom.currentStage}-ExtApiGatewayRestApiRootResourceId
   environment:
     env: ${self:custom.currentStage}
-    clientId: ${self:custom.clientId}
-    userPoolId: ${self:custom.userPoolId}
+    # clientId: ${self:custom.clientId}
+    # userPoolId: ${self:custom.userPoolId}
+    clientId: 746rj7cov5qsnj8t9esckup6o0
+    userPoolId: us-east-1_ymT4PriZh
   deploymentBucket:
     name: ${self:custom.deploymentBucketName}
 
@@ -65,6 +68,28 @@ functions:
     events:
       - http:
           path: /login
+          method: POST
+          authorizer:
+            type: REQUEST
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
+  requestPasswordReset:
+    name: requestPasswordReset-${self:custom.currentStage}
+    handler: lambdas/passwordReset.request
+    events:
+      - http:
+          path: /user/passwordResetRequest
+          method: POST
+          authorizer:
+            type: REQUEST
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
+  passwordReset:
+    name: passwordReset-${self:custom.currentStage}
+    handler: lambdas/passwordReset.reset
+    events:
+      - http:
+          path: /user/passwordReset
           method: POST
           authorizer:
             type: REQUEST
