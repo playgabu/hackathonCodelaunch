@@ -4,7 +4,6 @@ provider:
   name: aws
   region: us-east-1
   stage: ${self:custom.currentStage}
-  profile: training
   runtime: nodejs16.x
   role:
     'Fn::ImportValue': gabu-lambda-role-${self:custom.currentStage}
