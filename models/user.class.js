@@ -10,13 +10,15 @@ export default class UserModel {
 		this.pin = pin
 	}
 
-	validate() {
+	validate(validatePin = true) {
 		const stringRequiredFields = ['email', 'fullName', 'phone']
 		for (let field of stringRequiredFields) {
 			if (typeof this[field] !== 'string' || !this[field]) {
 				throw new Error(`Field ${field} is required`)
 			}
 		}
+
+		if(!validatePin) return
 
 		if(!this.pin || this.pin.length !== 4 || this.pin.match(/\D/)) {
 			throw new Error('Pin must be 4 digits')
@@ -64,7 +66,7 @@ export default class UserModel {
 			throw new Error('Email already exists')
 		}
 		
-		user.validate()
+		user.validate(false)
 
 		user.id = uuid()
 		user.createdAt = new Date().toISOString()

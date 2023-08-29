@@ -89,6 +89,17 @@ functions:
           path: /refreshSession
           method: POST
           cors: true
+  setUserPin:
+    name: setUserPin-${self:custom.currentStage}
+    handler: lambdas/setPin.handler
+    events:
+      - http:
+          path: /user/pin
+          method: POST
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: ${self:custom.authorizerId}
+          cors: true
   requestPasswordReset:
     name: requestPasswordReset-${self:custom.currentStage}
     handler: lambdas/passwordReset.request

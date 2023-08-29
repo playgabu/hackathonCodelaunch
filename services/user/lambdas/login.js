@@ -29,7 +29,8 @@ export const handler = async (event) => {
 			response.body = {
 			  refreshToken: RefreshToken,
 			  accessToken: AccessToken,
-			  id: userData.id
+			  id: userData.id,
+				pinPending: !userData.pin,
 			}
 
 		  } else {
@@ -41,7 +42,6 @@ export const handler = async (event) => {
 			}
 		  }
 	}
-
 	catch (error) {
 		response.statusCode = 500
 		response.body = { message: error.message }
